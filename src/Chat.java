@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Chat {
-    private ArrayList<String> usernames;
-    private ArrayList<Message> messages;
+public interface Chat {
+    void add_message(Message m);
+    ArrayList<Message> get_last_messages(int count);
 }

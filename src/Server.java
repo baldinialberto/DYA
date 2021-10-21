@@ -1,5 +1,4 @@
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -7,8 +6,17 @@ import java.util.Objects;
 public class Server {
     private String host_address;
     private int port;
-    private ArrayList<S_User> users;
-    private ArrayList<Chat> chats;
+    private UserArrayList users;
+    private ArrayList<GenericChat> chats;
+    private ServerSocket server_socket;
+
+
+    public Server()
+    {
+    }
+
+
+
     public User create_user(String username, String password)
     {
         S_User new_user = new S_User( username, password);
@@ -22,9 +30,24 @@ public class Server {
     }
     public User login(String username, String password)
     {
+        if (!users.contains(username))
+        {
+            System.out.println("username not registered");
+            return null;
+        } else {
+            S_User u = users.get(username);
+            Objects.requireNonNull(u).setOnline();
+            return u;
+        }
     }
     public void logout(String username)
     {
+        if (!users.contains(username))
+        {
+            System.out.println("username not registered");
+        } else {
+            Objects.requireNonNull(users.get(username)).setOffline();
+        }
     }
 
     private class S_User implements User {
@@ -70,8 +93,7 @@ public class Server {
             }
             return false;
         }
-        public boolean contains(User user) { return super.contains(user); }
-        public User get(String username)
+        public S_User get(String username)
         {
             for (S_User u : this)
             {
