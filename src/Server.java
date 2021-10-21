@@ -54,10 +54,30 @@ public class Server {
         public boolean getOnline_status() { return online_status; }
         public LocalDateTime getLast_access() { return last_access; }
         public boolean checkPassword(String password) { return this.password.compareTo(password) == 0; }
+        public int compareUsernames(String username) { return this.username.compareTo(username); }
         @Override
         public int compareTo(User u)
         {
             return this.username.compareTo(u.getUsername());
+        }
+    }
+    private class UserArrayList extends ArrayList<S_User> {
+        public boolean contains(String username)
+        {
+            for (S_User u : this)
+            {
+                if (u.compareUsernames(username) == 0) { return true; }
+            }
+            return false;
+        }
+        public boolean contains(User user) { return super.contains(user); }
+        public User get(String username)
+        {
+            for (S_User u : this)
+            {
+                if (u.compareUsernames(username) == 0) { return u; }
+            }
+            return null;
         }
     }
 }
