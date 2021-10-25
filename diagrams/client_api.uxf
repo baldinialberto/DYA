@@ -23,10 +23,10 @@
   getNewMessages();
   
   requestNewChat();
-  requestAddToChat(Chat, User);
-  requestRemoveFromChat(Chat, User);
-  requestDeleteChat(Chat);
-  sendMessage(Chat, MessageData);
+  requestAddToChat(base.Chat, base.User);
+  requestRemoveFromChat(base.Chat, base.User);
+  requestDeleteChat(base.Chat);
+  sendMessage(base.Chat, MessageData);
   </panel_attributes>
     <additional_attributes/>
   </element>
@@ -206,7 +206,7 @@ The given class prints each incoming message to the terminal.</panel_attributes>
       <w>100</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>Chat
+    <panel_attributes>base.Chat
 --
   id;
   owner;
@@ -221,7 +221,7 @@ The given class prints each incoming message to the terminal.</panel_attributes>
       <w>100</w>
       <h>50</h>
     </coordinates>
-    <panel_attributes>User
+    <panel_attributes>base.User
 --
   username;</panel_attributes>
     <additional_attributes/>
@@ -292,7 +292,7 @@ The given class prints each incoming message to the terminal.</panel_attributes>
       <w>120</w>
       <h>70</h>
     </coordinates>
-    <panel_attributes>ProtocolMessage
+    <panel_attributes>base.ProtocolMessage
 --
   header;
   data;</panel_attributes>
@@ -306,7 +306,7 @@ The given class prints each incoming message to the terminal.</panel_attributes>
       <w>170</w>
       <h>70</h>
     </coordinates>
-    <panel_attributes>ProtocolMessageHeader
+    <panel_attributes>base.ProtocolMessageHeader
 --
   type;
   data_len;</panel_attributes>
@@ -342,7 +342,7 @@ The given class prints each incoming message to the terminal.</panel_attributes>
       <w>260</w>
       <h>300</h>
     </coordinates>
-    <panel_attributes>/ProtocolMessageFactoryInterface/
+    <panel_attributes>/base.ProtocolMessageFactoryInterface/
 --
   MakeLoginRequest();
   MakeLogoutRequest();
@@ -382,7 +382,7 @@ The given class prints each incoming message to the terminal.</panel_attributes>
       <w>170</w>
       <h>120</h>
     </coordinates>
-    <panel_attributes>/ClientSocketInterface/
+    <panel_attributes>/base.ClientSocketInterface/
 --
   connect();
   close();
@@ -399,7 +399,7 @@ The given class prints each incoming message to the terminal.</panel_attributes>
       <w>200</w>
       <h>70</h>
     </coordinates>
-    <panel_attributes>/ProtocolMessageDataCrypter/
+    <panel_attributes>/base.ProtocolMessageDataCrypter/
 --
   cryptMessage(message);
   decryptMessage(message);</panel_attributes>
