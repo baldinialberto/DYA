@@ -1,9 +1,16 @@
 package base;
 
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import javafx.concurrent.Task;
 
 public class Server {
     private String host_address;
@@ -11,11 +18,56 @@ public class Server {
     private UserArrayList users;
     private ArrayList<GenericChat> chats;
     private ServerSocket server_socket;
-
+    private boolean isAlive;
+    private final Executor ThreadPoolEx = Executors.newCachedThreadPool();
 
     public Server() {
+        this.isAlive = true;
+        ThreadPoolEx.execute(new ServerListener(this));
     }
 
+    private class ServerListener implements Runnable {
+        private final Server server;
+        public ServerListener(Server server) {
+            this.server = server;
+        }
+
+        @Override
+        public void run() {
+            while (server.isAlive)
+            {
+                try {
+                    Socket s = server.server_socket.accept();
+                    server.ThreadPoolEx.execute(new ServerWorker(this.server, s));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private class ServerWorker implements Runnable {
+
+        private final Server server;
+        private final Socket socket;
+        public ServerWorker(Server server, Socket socket)
+        {
+            this.server = server;
+            this.socket = socket;
+        }
+        @Override
+        public void run() {
+            while (server.isAlive && !this.socket.isClosed())
+            {
+                server.serve_client(socket);
+            }
+        }
+    }
+
+    private void serve_client(Socket client)
+    {
+
+    }
 
     public User create_user(String username, String password) {
         S_User new_user = new S_User(username, password);
@@ -46,73 +98,4 @@ public class Server {
         }
     }
 
-    private class S_User implements User {
-        protected String username;
-        protected String password;
-        protected boolean online_status;
-        protected LocalDateTime last_access;
-
-        public S_User(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-
-        public void setOnline() {
-            this.online_status = true;
-        }
-
-        public void setOffline() {
-            this.online_status = false;
-        }
-
-        public void changePassword(Server s, String password) throws NullPointerException {
-            Objects.requireNonNull(s);
-            this.password = password;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public boolean getOnline_status() {
-            return online_status;
-        }
-
-        public LocalDateTime getLast_access() {
-            return last_access;
-        }
-
-        public boolean checkPassword(String password) {
-            return this.password.compareTo(password) == 0;
-        }
-
-        public int compareUsernames(String username) {
-            return this.username.compareTo(username);
-        }
-
-        @Override
-        public int compareTo(User u) {
-            return this.username.compareTo(u.getUsername());
-        }
-    }
-
-    private class UserArrayList extends ArrayList<S_User> {
-        public boolean contains(String username) {
-            for (S_User u : this) {
-                if (u.compareUsernames(username) == 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public S_User get(String username) {
-            for (S_User u : this) {
-                if (u.compareUsernames(username) == 0) {
-                    return u;
-                }
-            }
-            return null;
-        }
-    }
 }

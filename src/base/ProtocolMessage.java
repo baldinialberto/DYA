@@ -1,4 +1,6 @@
 package base;
 
-public interface ProtocolMessage {
+public class ProtocolMessage {
+    public ProtocolMessageHeader header;
+    public Byte[] data;
 }

@@ -1,4 +1,6 @@
 package base;
 
-public interface ProtocolMessageHeader {
+public class ProtocolMessageHeader {
+    public int type;
+    public long data_len;
 }
