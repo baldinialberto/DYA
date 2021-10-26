@@ -1,16 +1,17 @@
 package base;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import javafx.concurrent.Task;
 
 public class Server {
     private String host_address;
@@ -22,8 +23,22 @@ public class Server {
     private final Executor ThreadPoolEx = Executors.newCachedThreadPool();
 
     public Server() {
-        this.isAlive = true;
-        ThreadPoolEx.execute(new ServerListener(this));
+        try {
+            server_socket = new ServerSocket(8080);
+            this.isAlive = true;
+            ThreadPoolEx.execute(new ServerListener(this));
+            System.out.println(
+                    "Server class initialized\n" +
+                            "server address : " +
+                            InetAddress.getLocalHost().getHostAddress() +
+                            " at port : " +
+                            server_socket.getLocalPort()
+            );
+        } catch (Exception e) {
+            this.isAlive = false;
+            e.printStackTrace();
+        }
+
     }
 
     private class ServerListener implements Runnable {
@@ -38,6 +53,7 @@ public class Server {
             {
                 try {
                     Socket s = server.server_socket.accept();
+                    System.out.println( s.getInetAddress().getHostAddress() + " connected");
                     server.ThreadPoolEx.execute(new ServerWorker(this.server, s));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -50,23 +66,38 @@ public class Server {
 
         private final Server server;
         private final Socket socket;
+        BufferedReader b_reader;
+        BufferedWriter b_writer;
         public ServerWorker(Server server, Socket socket)
         {
             this.server = server;
             this.socket = socket;
+            try {
+                b_reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                b_writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         @Override
         public void run() {
             while (server.isAlive && !this.socket.isClosed())
             {
-                server.serve_client(socket);
+                try {
+                    server.serve_client(socket, b_writer, b_reader);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void serve_client(Socket client)
-    {
-
+    private void serve_client(Socket client, BufferedWriter b_writer, BufferedReader b_reader) throws IOException {
+        System.out.println(
+                client.getInetAddress().getHostName() + " at " +
+                client.getInetAddress().getHostAddress() + " sent request " +
+                b_reader.readLine()
+        );
     }
 
     public User create_user(String username, String password) {
