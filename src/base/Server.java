@@ -81,10 +81,11 @@ public class Server {
         }
         @Override
         public void run() {
-            while (server.isAlive && !this.socket.isClosed())
+            String received;
+            while (server.isAlive && !this.socket.isClosed() && this.socket.isConnected())
             {
                 try {
-                    server.serve_client(socket, b_writer, b_reader);
+                    if (server.serve_client(socket, b_writer, b_reader) == 1) break;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -92,12 +93,15 @@ public class Server {
         }
     }
 
-    private void serve_client(Socket client, BufferedWriter b_writer, BufferedReader b_reader) throws IOException {
+    private int serve_client(Socket client, BufferedWriter b_writer, BufferedReader b_reader) throws IOException {
+        String message = b_reader.readLine();
+        if (message == null) return 1;
         System.out.println(
                 client.getInetAddress().getHostName() + " at " +
                 client.getInetAddress().getHostAddress() + " sent request " +
-                b_reader.readLine()
+                message
         );
+        return 0;
     }
 
     public User create_user(String username, String password) {
