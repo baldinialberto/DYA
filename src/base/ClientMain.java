@@ -17,7 +17,9 @@ public class ClientMain {
         try {
             socket.connect(new InetSocketAddress("192.168.1.111", 8080));
             BufferedWriter b_writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            b_writer.write("TestClientString\n");
+            b_writer.write("TestClientString");
+            b_writer.newLine();
+            b_writer.flush();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
