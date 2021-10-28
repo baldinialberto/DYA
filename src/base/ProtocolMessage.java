@@ -40,13 +40,27 @@ public class ProtocolMessage {
     {
         String res = "type : ";
         switch (this.header.type) {
-            case ProtocolMessageHeader.Types._message -> res += "message\n";
-            case ProtocolMessageHeader.Types._login -> res += "login\n";
-            case ProtocolMessageHeader.Types._logout -> res += "logout\n";
-            case ProtocolMessageHeader.Types._string -> res += "string\n";
-            case ProtocolMessageHeader.Types._int -> res += "int\n";
-            case ProtocolMessageHeader.Types._long -> res += "long\n";
-            default -> res += "unknown\n";
+            case ProtocolMessageHeader.Types._message:
+                res += "message\n";
+                break;
+            case ProtocolMessageHeader.Types._login:
+                res += "login\n";
+                break;
+            case ProtocolMessageHeader.Types._logout:
+                res += "logout\n";
+                break;
+            case ProtocolMessageHeader.Types._string:
+                res += "string\n";
+                break;
+            case ProtocolMessageHeader.Types._int:
+                res += "int\n";
+                break;
+            case ProtocolMessageHeader.Types._long:
+                res += "long\n";
+                break;
+            default:
+                res += "unknown\n";
+                break;
         }
         res += "content : ";
         if (this.data == null)
@@ -55,19 +69,23 @@ public class ProtocolMessage {
         } else {
             try {
                 switch (this.header.type) {
-                    case ProtocolMessageHeader.Types._message,
-                            ProtocolMessageHeader.Types._login,
-                            ProtocolMessageHeader.Types._logout -> res += "none";
-                    case ProtocolMessageHeader.Types._string -> {
-                        res += (java.lang.String) new ObjectInputStream(new ByteArrayInputStream(this.data)).readObject();
-                    }
-                    case ProtocolMessageHeader.Types._int -> {
+                    case ProtocolMessageHeader.Types._message:
+                    case ProtocolMessageHeader.Types._login:
+                    case ProtocolMessageHeader.Types._logout:
+                        res += "none";
+                        break;
+                    case ProtocolMessageHeader.Types._string:
+                        res += (String) new ObjectInputStream(new ByteArrayInputStream(this.data)).readObject();
+                        break;
+                    case ProtocolMessageHeader.Types._int:
                         res += new ObjectInputStream(new ByteArrayInputStream(this.data)).readInt();
-                    }
-                    case ProtocolMessageHeader.Types._long -> {
+                        break;
+                    case ProtocolMessageHeader.Types._long:
                         res += new ObjectInputStream(new ByteArrayInputStream(this.data)).readLong();
-                    }
-                    default -> res += "unknown";
+                        break;
+                    default:
+                        res += "unknown";
+                        break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
