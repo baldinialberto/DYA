@@ -2,6 +2,7 @@ package base;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -30,14 +31,19 @@ public class ProtocolMessage {
     public static ProtocolMessage readFromDataStream(DataInputStream inputStream) throws IOException {
         int type = inputStream.readInt();
         int len = inputStream.readInt();
-        byte[] data = new byte[len];
         if (len > 0) {
+            byte[] data = new byte[len];
             inputStream.readFully(data, 0, len);
             return new ProtocolMessage(type, data);
         } else {
             return new ProtocolMessage(type);
         }
-
+    }
+    public static void writeToDataStream(DataOutputStream outputStream, int type, int len, byte[] data) throws IOException
+    {
+        outputStream.writeInt(type);
+        outputStream.writeInt(len);
+        if (len > 0) outputStream.write(data, 0, len);
     }
 
     @Override
@@ -80,7 +86,7 @@ public class ProtocolMessage {
                         res += "none";
                         break;
                     case ProtocolMessageHeader.Types._string:
-                        res += (String) new ObjectInputStream(new ByteArrayInputStream(this.data)).readObject();
+                        res += new String(this.data);
                         break;
                     case ProtocolMessageHeader.Types._int:
                         res += new ObjectInputStream(new ByteArrayInputStream(this.data)).readInt();
@@ -94,8 +100,6 @@ public class ProtocolMessage {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                res += "unknown";
             }
         }
         return res;

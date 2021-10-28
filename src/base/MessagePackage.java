@@ -26,9 +26,12 @@ public class MessagePackage {
         DataOutputStream os = new DataOutputStream(to.getOutputStream());
         os.writeInt(messages.size());
         for (ProtocolMessage message : messages) {
-            os.writeInt(message.getHeader().type);
-            os.writeLong(message.getHeader().data_len);
-            if (message.getHeader().data_len > 0) os.write(message.getData(), 0, message.getHeader().data_len);
+            ProtocolMessage.writeToDataStream(
+                    os,
+                    message.getHeader().type,
+                    message.getHeader().data_len,
+                    message.getData()
+            );
         }
         os.close(); // automatic flush
     }
