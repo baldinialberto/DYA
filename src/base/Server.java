@@ -92,6 +92,7 @@ public class Server {
         {
             System.out.println(mp.getMessage(i).toString());
         }
+        System.exit(0);
         return 0;
     }
 
