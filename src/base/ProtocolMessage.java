@@ -31,8 +31,13 @@ public class ProtocolMessage {
         int type = inputStream.readInt();
         int len = inputStream.readInt();
         byte[] data = new byte[len];
-        inputStream.readFully(data, 0, len);
-        return new ProtocolMessage(type, data);
+        if (len > 0) {
+            inputStream.readFully(data, 0, len);
+            return new ProtocolMessage(type, data);
+        } else {
+            return new ProtocolMessage(type);
+        }
+
     }
 
     @Override

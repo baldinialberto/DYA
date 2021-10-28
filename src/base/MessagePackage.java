@@ -28,7 +28,7 @@ public class MessagePackage {
         for (ProtocolMessage message : messages) {
             os.writeInt(message.getHeader().type);
             os.writeLong(message.getHeader().data_len);
-            os.write(message.getData());
+            if (message.getHeader().data_len > 0) os.write(message.getData(), 0, message.getHeader().data_len);
         }
         os.close(); // automatic flush
     }
