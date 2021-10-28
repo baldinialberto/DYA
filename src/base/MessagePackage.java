@@ -1,5 +1,9 @@
 package base;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,5 +33,29 @@ public class MessagePackage {
     public ProtocolMessage[] getMessages()
     {
         return this.messages;
+    }
+    public ProtocolMessage getMessage(int index)
+    {
+        return this.messages[index];
+    }
+    public void send(Socket to) throws IOException {
+        DataOutputStream os = new DataOutputStream(to.getOutputStream());
+        os.writeInt(message_count);
+        for (int i = 0; i < message_count; i++)
+        {
+            os.writeInt(messages[i].getHeader().type);
+            os.writeLong(messages[i].getHeader().data_len);
+            os.write(messages[i].getData());
+        }
+        os.close(); // automatic flush
+    }
+    public void receive(Socket from) throws IOException {
+        DataInputStream is = new DataInputStream(from.getInputStream());
+        message_count = is.readInt();
+        messages = new ProtocolMessage[message_count];
+        for (int i = 0; i < message_count; i++) {
+            messages[i] = ProtocolMessage.readFromDataStream(is);
+        }
+        is.close();
     }
 }

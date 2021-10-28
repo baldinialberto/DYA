@@ -1,8 +1,6 @@
 package base;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -16,10 +14,8 @@ public class ClientMain {
         Socket socket = new Socket();
         try {
             socket.connect(new InetSocketAddress("192.168.1.111", 8080));
-            BufferedWriter b_writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            b_writer.write("TestClientString");
-            b_writer.newLine();
-            b_writer.flush();
+            ProtocolMessageFactory mf = new ProtocolMessageFactory();
+            mf.MakeLoginRequest("TestUsername", "SecurePassword").send(socket);
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();

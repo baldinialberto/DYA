@@ -66,18 +66,10 @@ public class Server {
 
         private final Server server;
         private final Socket socket;
-        BufferedReader b_reader;
-        BufferedWriter b_writer;
         public ServerWorker(Server server, Socket socket)
         {
             this.server = server;
             this.socket = socket;
-            try {
-                b_reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                b_writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         @Override
         public void run() {
@@ -85,7 +77,7 @@ public class Server {
             while (server.isAlive && !this.socket.isClosed() && this.socket.isConnected())
             {
                 try {
-                    if (server.serve_client(socket, b_writer, b_reader) == 1) break;
+                    if (server.serve_client(socket) == 1) break;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -93,14 +85,13 @@ public class Server {
         }
     }
 
-    private int serve_client(Socket client, BufferedWriter b_writer, BufferedReader b_reader) throws IOException {
-        String message = b_reader.readLine();
-        if (message == null) return 1;
-        System.out.println(
-                client.getInetAddress().getHostName() + " at " +
-                client.getInetAddress().getHostAddress() + " sent request " +
-                message
-        );
+    private int serve_client(Socket client) throws IOException {
+        MessagePackage mp = new MessagePackage();
+        mp.receive(client);
+        for (int i = 0; i < mp.getMessage_count(); i++)
+        {
+            System.out.println(mp.getMessage(i).toString());
+        }
         return 0;
     }
 

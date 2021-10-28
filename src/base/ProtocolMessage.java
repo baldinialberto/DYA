@@ -1,6 +1,8 @@
 package base;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 
 public class ProtocolMessage {
@@ -23,6 +25,14 @@ public class ProtocolMessage {
     }
     public ProtocolMessageHeader getHeader() {
         return header;
+    }
+
+    public static ProtocolMessage readFromDataStream(DataInputStream inputStream) throws IOException {
+        int type = inputStream.readInt();
+        int len = inputStream.readInt();
+        byte[] data = new byte[len];
+        inputStream.readFully(data, 0, len);
+        return new ProtocolMessage(type, data);
     }
 
     @Override
