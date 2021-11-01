@@ -1,10 +1,11 @@
 package api;
 
-import base.Message;
-
-public class TerminalMessagePrinterExecutor implements MessageExecutorInterface {
+public class TerminalMessagePrinterExecutor implements MessageExecutorInterface
+{
+	public TerminalMessagePrinterExecutor() { }
+	
     @Override
-    public void onIncomingMessage(Message message) {
-
+    public void onIncomingMessage(ChatMessage message) {
+    	System.out.println(message.data.readAsString());
     }
 }

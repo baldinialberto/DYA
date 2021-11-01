@@ -1,7 +1,5 @@
 package api;
 
-import base.Message;
-
 public interface MessageExecutorInterface {
-    void onIncomingMessage(Message message);
+    void onIncomingMessage(ChatMessage message);
 }

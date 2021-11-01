@@ -1,66 +1,79 @@
 package api;
 
-import base.Chat;
-import base.Message;
+import java.util.*;
 
 public class ClientAPI implements ClientAPIInterface {
-    @Override
-    public void login(String user, String password) {
 
-    }
+	@Override
+	public void login(String user, String password) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void logout() {
+	@Override
+	public void logout() {
+		// TODO Auto-generated method stub
+		
+	}
 
-    }
+	@Override
+	public void registerMessageExecutor(MessageExecutorInterface executor) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void registerMessageExecutor(MessageExecutorInterface executor) {
+	@Override
+	public void unregisterMessageExecutor(MessageExecutorInterface executor) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    }
+	@Override
+	public HashSet<User> getUsers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public void unregisterMessageExecutor(MessageExecutorInterface executor) {
+	@Override
+	public TreeSet<Chat> getChats() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    }
+	@Override
+	public List<ChatMessage> getNewMessages() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public void getUsers() throws Exception {
+	@Override
+	public api.Chat requestNewChat() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    }
+	@Override
+	public void requestAddToChat(Chat.Id chat, User user) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void getChats() throws Exception {
+	@Override
+	public void requestRemoveFromChat(Chat.Id chat, User user) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    }
+	@Override
+	public void requestDeleteChat(Chat.Id chat) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void getNewMessage() throws Exception {
-
-    }
-
-    @Override
-    public void requestNewChat() {
-
-    }
-
-    @Override
-    public void requestAddToChat(Chat chat, String user) {
-
-    }
-
-    @Override
-    public void requestRemoveFromChat(Chat chat, String user) {
-
-    }
-
-    @Override
-    public void requestDeleteChat(Chat chat) {
-
-    }
-
-    @Override
-    public void sendMessage(Chat chat, Message message) {
-
-    }
+	@Override
+	public void sendMessage(Chat.Id chat, ChatMessage message) {
+		// TODO Auto-generated method stub
+		
+	}
+    
 }
